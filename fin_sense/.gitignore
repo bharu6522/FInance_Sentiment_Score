@@ -1,0 +1,6 @@
+aws_env/
+.env
+__pycache__/
+*.pyc
+data/finsense.db
+models/model.pkl

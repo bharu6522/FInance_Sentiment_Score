@@ -1,0 +1,55 @@
+Week 1 : Data Pipeline 
+[ ] Set up project folder structure locally
+[ ] Create virtual environment + requirements.txt
+[ ] Design and create SQLite schema (articles + prices tables)
+[ ] Write news scraper (NewsAPI or BeautifulSoup from MoneyControl)
+[ ] Write price fetcher (yfinance for Nifty, Gold, crypto)
+[ ] Test scraper — verify data lands correctly in SQLite
+[ ] Write APScheduler setup to run scraper every 6 hours
+[ ] Push everything to GitHub (first commit)
+
+
+Week 2 : LLM Sentiment Engine 
+[ ] Install and test FinBERT locally (ProsusAI/finbert)
+[ ] Write sentiment scoring function (headline → label + score)
+[ ] Write batch processor (reads NULL rows from DB, scores them, writes back)
+[ ] Get Groq free API key + test connection
+[ ] Write plain-language explainer prompt using Groq (llama-3.1-8b)
+[ ] Test full flow: scrape → score → explain on 20 real headlines
+[ ] Log any failures / edge cases
+[ ] Push to GitHub
+
+Week 3 : Ml Prediction Model 
+[ ] Write feature builder (SQL join articles + prices → feature row)
+[ ] Define feature list: avg_sentiment_24h, sentiment_momentum, 
+    high_impact_count, nifty_return_1d, volume, VIX if available
+[ ] Collect at least 3 months of historical data for training
+[ ] Label data: next day UP / DOWN / FLAT (based on 0.5% threshold)
+[ ] Train XGBoost classifier
+[ ] Evaluate: accuracy, confusion matrix, classification report
+[ ] Add SHAP values to explain predictions
+[ ] Save trained model as model.pkl → upload to S3
+[ ] Backtest on last 30 days — check prediction accuracy
+[ ] Push to GitHub
+
+Week 4 : Dashboard + API + deploy 
+[ ] Wrap pipeline in FastAPI (POST /score, GET /predictions, GET /summary)
+[ ] Write Streamlit dashboard:
+    [ ] Sentiment trend chart (last 7 days per asset)
+    [ ] Today's prediction card (UP/DOWN/FLAT + confidence %)
+    [ ] Top news feed with sentiment labels
+    [ ] Plain-language summary from Groq
+    [ ] SHAP top driver explanation
+[ ] Test everything end to end locally
+[ ] Set up EC2 t2.micro on AWS (free tier)
+[ ] Set up billing alert at $1 on AWS console
+[ ] SSH into EC2, install dependencies, clone repo
+[ ] Configure environment variables (.env file)
+[ ] Run FastAPI + Streamlit as background services
+[ ] Open ports 8000 and 8501 in EC2 security group
+[ ] Verify dashboard is accessible via public IP
+[ ] Set up GitHub Actions for auto-deploy on push (optional but impressive)
+[ ] Write README.md with architecture diagram + setup instructions
+[ ] Push final code to GitHub
+
+

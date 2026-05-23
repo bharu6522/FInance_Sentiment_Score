@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 import time
 import logging
 from finebert_scorer import score_headline
+from groq_explainer import explain_headline
+
 
 load_dotenv()
 
@@ -28,6 +30,7 @@ def update_article(conn: sqlite3.Connection, article_id: int, result: dict):
             sentiment_score = ?,
             asset_tag       = ?,
             impact          = ?,
+            explanation     = ?,
             is_processed    = 1
              WHERE id = ? 
                  """ , (
@@ -35,6 +38,7 @@ def update_article(conn: sqlite3.Connection, article_id: int, result: dict):
         result["sentiment_score"],
         result["asset_tag"],
         result["impact"],
+        result.get("explanation"),
         article_id,
     )
     )
@@ -77,6 +81,12 @@ def run_batch_processor():
 
         result = score_headline(headline)
         if result:
+            explanation = explain_headline(
+                    headline, 
+                    result["sentiment_label"], 
+                    result["asset_tag"]
+    )
+            result["explanation"] = explanation
             update_article(conn, article_id, result)
             success += 1
         else:

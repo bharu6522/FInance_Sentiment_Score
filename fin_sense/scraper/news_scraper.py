@@ -6,7 +6,7 @@ from datetime import datetime
 from dotenv import load_dotenv 
 
 load_dotenv()
-DB_PATH = os.getenv("DB_PATH","data/finsense.db")
+DB_PATH = os.getenv("DB_PATH", os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "finsense.db"))
 
 HEADERS  = {
     "User-Agent": (

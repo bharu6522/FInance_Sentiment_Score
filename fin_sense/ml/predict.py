@@ -101,6 +101,10 @@ def prdict_asset(asset:str)-> dict|None:
 
     proba = model.predict_proba(X)[0] # list of prob for all classes 
     pred_index = np.argmax(proba) # index of max probability 
+
+    # Training: need of inverse_transform 
+    # "UP","DOWN","FLAT"  →  encoder.fit_transform()  →  2, 0, 1  →  XGBoost learns 
+
     pred_label = encoder.inverse_transform([pred_index])[0]
     confidence = round(proba[pred_index],3)
 

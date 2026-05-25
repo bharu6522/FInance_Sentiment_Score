@@ -88,7 +88,7 @@ def get_latest_feature(asset: str)-> pd.DataFrame | None:
     return pd.DataFrame([row])
 
 
-def prdict_asset(asset:str)-> dict|None:
+def predict_asset(asset:str)-> dict|None:
     bundle = load_model()
     model = bundle["model"]
     encoder = bundle["encoder"]
@@ -111,8 +111,8 @@ def prdict_asset(asset:str)-> dict|None:
     result = {
         "asset":      asset,
         "prediction": pred_label,
-        "confidence": confidence,
-        "proba":      dict(zip(encoder.classes_, proba.round(3))),
+        "confidence": float(confidence),
+        "proba":      {k: float(v) for k, v in zip(encoder.classes_, proba)}, # dict(zip(encoder.classes_, proba.round(3))),
         "date":       datetime.now().strftime("%Y-%m-%d")
         }
 
@@ -120,7 +120,7 @@ def prdict_asset(asset:str)-> dict|None:
     conn.execute("""
     INSERT OR REPLACE INTO predictions 
                  (asset, prediction_date, predicted_label, confidence)
-                 VALUES(?, ?, ?, ?) """, (asset, result["date"], pred_label, confidence))
+                 VALUES(?, ?, ?, ?) """, (asset, result["date"], pred_label, float(confidence)))
     
     conn.commit()
     conn.close()
@@ -130,7 +130,7 @@ def prdict_asset(asset:str)-> dict|None:
 if __name__ == "__main__":
 
     for asset in ['NIFTY',"GOLD","CRYPTO"]:
-        result = prdict_asset(asset)
+        result = predict_asset(asset)
 
         if result:
             print(f"\nAsset      : {result['asset']}")

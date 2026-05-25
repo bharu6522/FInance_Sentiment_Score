@@ -10,11 +10,11 @@ from sklearn.metrics import classification_report, confusion_matrix
 import xgboost as xgb 
 import shap 
 from feature_builder import build_feature_matrix
-
+from sklearn.utils.class_weight import compute_sample_weight
 
 load_dotenv()
 DB_PATH = os.getenv("DB_PATH", os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "finsense.db"))
-MODEL_PATH = os.getenv("DB_PATH", os.path.join(os.path.dirname(os.path.dirname(__file__)), "models", "model.pkl"))
+MODEL_PATH = os.getenv("MODEL_PATH", os.path.join(os.path.dirname(os.path.dirname(__file__)), "models", "model.pkl"))
 
 
 FEATURES = [
@@ -67,20 +67,24 @@ def train():
         learning_rate=0.05,
         subsample=0.8,
         colsample_bytree=0.8,
-        use_label_encoder=False,
+        # use_label_encoder=False,
         eval_metric="mlogloss",
         random_state=42,
+        scale_pos_weight = 1
     )
+
+    sample_weights = compute_sample_weight(class_weight='balanced', y= y_train)
 
     model.fit(
         X_train, y_train,
+        sample_weight = sample_weights,
         eval_set=[(X_test, y_test)],
         verbose=50,
     )
 
     y_pred = model.predict(X_test)
     print("\n[train] Classification Report:")
-    print(classification_report(y_test, y_pred, target_names=le.classes_))
+    print(classification_report(y_test, y_pred, target_names= le.classes_))
 
     print("[train] Confusion Matrix:")
     print(confusion_matrix(y_test, y_pred))

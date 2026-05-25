@@ -42,13 +42,13 @@ def train():
     df = build_feature_matrix()
     df = df.dropna(subset= FEATURES)
 
+    df = df.replace([np.inf, -np.inf], np.nan)
+    df = df.dropna(subset= FEATURES)
+    df = df.reset_index(drop=True)
+
     X = df[FEATURES]
     y = df["target"]
 
-    X = X.replace([np.inf, -np.inf], np.nan)
-
-    df = df.replace([np.inf, -np.inf], np.nan)
-    df = df.dropna(subset= FEATURES)
 
     print(f"\n[train] Total usable rows : {len(df)}")
     print(f"[train] Target distribution:\n{df['target'].value_counts()}")
@@ -58,8 +58,21 @@ def train():
 
     print(f"\n[train] Label encoding: {dict(zip(le.classes_, le.transform(le.classes_)))}")
 
-    X_train, X_test, y_train, y_test = train_test_split(X,y_encoded, test_size=0.2,random_state=42, shuffle= False)
-    print(f"[train] Train size: {len(X_train)}  Test size: {len(X_test)}")
+    cutoff = pd.Timestamp.now() - pd.Timedelta(days=30)
+    train_mask = pd.to_datetime(df["date"]) < cutoff
+    test_mask  = pd.to_datetime(df["date"]) >= cutoff
+
+    X_train = X[train_mask]
+    y_train = y_encoded[train_mask]
+    X_test  = X[test_mask]
+    y_test  = y_encoded[test_mask]
+
+    df[test_mask].to_csv("fin_sense/data/backtest_holdout.csv", index=False)
+    print(f"[train] Train: {len(X_train)} rows  Holdout: {len(X_test)} rows")
+    
+    
+    # X_train, X_test, y_train, y_test = train_test_split(X,y_encoded, test_size=0.2,random_state=42, shuffle= False)
+    # print(f"[train] Train size: {len(X_train)}  Test size: {len(X_test)}")
 
     model = xgb.XGBClassifier(
         n_estimators=200,
@@ -70,7 +83,7 @@ def train():
         # use_label_encoder=False,
         eval_metric="mlogloss",
         random_state=42,
-        scale_pos_weight = 1
+        # scale_pos_weight = 1
     )
 
     sample_weights = compute_sample_weight(class_weight='balanced', y= y_train)
@@ -123,7 +136,7 @@ def train():
         "model":      model,
         "encoder":    le,
         "features":   FEATURES,
-        "explainer":  explainer,
+        # "explainer":  explainer,
     }
     with open(MODEL_PATH, "wb") as f:
         pickle.dump(bundle, f)

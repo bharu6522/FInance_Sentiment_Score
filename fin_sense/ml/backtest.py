@@ -37,7 +37,7 @@ def backtest(days: int = 30):
     model = bundle["model"]
     encoder = bundle["encoder"]
 
-    df = build_feature_matrix()
+    df = pd.read_csv(r"fin_sense\\data\\backtest_holdout.csv")
     df = df.replace([np.inf, -np.inf],np.nan).dropna(subset= FEATURES)
 
     df = df.sort_values("date")

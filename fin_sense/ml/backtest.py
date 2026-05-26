@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np 
 import pickle 
 from dotenv import load_dotenv
-from feature_builder import build_feature_matrix
+from ml.feature_builder import build_feature_matrix
 
 load_dotenv()
 
@@ -37,7 +37,7 @@ def backtest(days: int = 30):
     model = bundle["model"]
     encoder = bundle["encoder"]
 
-    df = pd.read_csv(r"fin_sense\\data\\backtest_holdout.csv")
+    df = pd.read_csv(r"data\\backtest_holdout.csv")
     df = df.replace([np.inf, -np.inf],np.nan).dropna(subset= FEATURES)
 
     df = df.sort_values("date")

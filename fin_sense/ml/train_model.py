@@ -9,7 +9,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import classification_report, confusion_matrix
 import xgboost as xgb 
 import shap 
-from feature_builder import build_feature_matrix
+from ml.feature_builder import build_feature_matrix
 from sklearn.utils.class_weight import compute_sample_weight
 
 load_dotenv()
@@ -67,7 +67,7 @@ def train():
     X_test  = X[test_mask]
     y_test  = y_encoded[test_mask]
 
-    df[test_mask].to_csv("fin_sense/data/backtest_holdout.csv", index=False)
+    df[test_mask].to_csv("data/backtest_holdout.csv", index=False)
     print(f"[train] Train: {len(X_train)} rows  Holdout: {len(X_test)} rows")
     
     

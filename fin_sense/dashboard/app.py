@@ -9,7 +9,9 @@ import plotly.graph_objects as go
 
 st.set_page_config(page_title= "FinSense", page_icon = "📈", layout = "wide")
 
-API_BASE ="http://localhost:8000"
+# API_BASE ="http://localhost:8000"
+
+API_BASE = os.getenv("API_BASE", "http://localhost:8000")
 
 def fetch(endpoint: str, params: dict= None):
     try:

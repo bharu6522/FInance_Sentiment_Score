@@ -2,9 +2,11 @@ import sqlite3
 import os 
 
 # Correct path: this file is in fin_sense/data/, so go up one level and into data/
-DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "fin_sense", "data", "finsense.db")
+# DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "fin_sense", "data", "finsense.db")
 # Or simpler: just use the file's directory
 # DB_PATH = os.path.join(os.path.dirname(__file__), "finsense.db")
+
+DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "finsense.db")
 
 os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
 

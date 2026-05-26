@@ -1,5 +1,7 @@
 import os 
-# sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+import sys
+#sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware 
@@ -8,12 +10,16 @@ import sqlite3
 import pandas as pd 
 
 
-from fin_sense.ml.predict import predict_asset
-from fin_sense.scraper.news_scraper import run_news_scraper
-from fin_sense.scraper.price_fetcher import run_price_fetcher
-from fin_sense.sentiment.batch_processor import run_batch_processor
+from ml.predict import predict_asset
+from scraper.news_scraper import run_news_scraper
+from scraper.price_fetcher import run_price_fetcher
+from sentiment.batch_processor import run_batch_processor
+
 
 from dotenv import load_dotenv
+from apscheduler.schedulers.background import BackgroundScheduler
+from scheduler.jobs import run_pipeline
+
 
 load_dotenv()
 
@@ -27,6 +33,22 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.on_event("startup")
+def start_scheduler():
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(
+        func=run_pipeline,
+        trigger="interval",
+        hours=6,
+        id="main_pipeline",
+        replace_existing=True
+    )
+    scheduler.start()
+    print("[scheduler] Started — pipeline runs every 6 hours")
+
+
 
 @app.get("/")
 def root():

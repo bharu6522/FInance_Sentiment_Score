@@ -40,6 +40,8 @@ Traceback (most recent call last):
   File "<frozen importlib._bootstrap>", line 938, in _load_unlocked
   File "<frozen importlib._bootstrap_external>", line 759, in exec_module
   File "<frozen importlib._bootstrap>", line 491, in _call_with_frames_removed
-  File "/home/ubuntu/FInance_Sentiment_Score/fin_sense/api/main.py", line 11, in <module>
-    from fin_sense.ml.predict import predict_asset
+  File "/home/ubuntu/FInance_Sentiment_Score/fin_sense/api/main.py", line 16, in <module>
+    from sentiment.batch_processor import run_batch_processor
+  File "/home/ubuntu/FInance_Sentiment_Score/fin_sense/sentiment/batch_processor.py", line 6, in <module>
+    from fin_sense.sentiment.finebert_scorer import score_headline
 ModuleNotFoundError: No module named 'fin_sense'

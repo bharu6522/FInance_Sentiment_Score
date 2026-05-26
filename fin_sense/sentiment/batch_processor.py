@@ -3,8 +3,8 @@ import os
 from dotenv import load_dotenv
 import time
 import logging
-from fin_sense.sentiment.finebert_scorer import score_headline
-from fin_sense.sentiment.groq_explainer import explain_headline
+from sentiment.finebert_scorer import score_headline
+from sentiment.groq_explainer import explain_headline
 
 
 load_dotenv()

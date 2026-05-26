@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np 
 import pickle 
 from dotenv import load_dotenv
-from feature_builder import build_feature_matrix
+from fin_sense.ml.feature_builder import build_feature_matrix
 
 load_dotenv()
 

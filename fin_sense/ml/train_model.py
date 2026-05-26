@@ -9,7 +9,7 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import classification_report, confusion_matrix
 import xgboost as xgb 
 import shap 
-from feature_builder import build_feature_matrix
+from fin_sense.ml.feature_builder import build_feature_matrix
 from sklearn.utils.class_weight import compute_sample_weight
 
 load_dotenv()

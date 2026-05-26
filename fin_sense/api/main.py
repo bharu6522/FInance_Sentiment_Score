@@ -13,7 +13,38 @@ from fin_sense.scraper.news_scraper import run_news_scraper
 from fin_sense.scraper.price_fetcher import run_price_fetcher
 from fin_sense.sentiment.batch_processor import run_batch_processor
 
+
 from dotenv import load_dotenv
+from apscheduler.schedulers.background import BackgroundScheduler
+from scheduler.jobs import run_pipeline
+
+# start scheduler when app starts
+@app.on_event("startup")
+def start_scheduler():
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(
+        func=run_pipeline,
+        trigger="interval",
+        hours=6,
+        id="main_pipeline",
+        replace_existing=True
+    )
+    scheduler.start()
+    print("[scheduler] Started — pipeline runs every 6 hours")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 load_dotenv()
 

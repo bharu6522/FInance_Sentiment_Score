@@ -1,5 +1,6 @@
 import os 
-# sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+#sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware 
@@ -8,10 +9,10 @@ import sqlite3
 import pandas as pd 
 
 
-from fin_sense.ml.predict import predict_asset
-from fin_sense.scraper.news_scraper import run_news_scraper
-from fin_sense.scraper.price_fetcher import run_price_fetcher
-from fin_sense.sentiment.batch_processor import run_batch_processor
+from ml.predict import predict_asset
+from scraper.news_scraper import run_news_scraper
+from scraper.price_fetcher import run_price_fetcher
+from sentiment.batch_processor import run_batch_processor
 
 
 from dotenv import load_dotenv
@@ -31,19 +32,6 @@ def start_scheduler():
     )
     scheduler.start()
     print("[scheduler] Started — pipeline runs every 6 hours")
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 load_dotenv()

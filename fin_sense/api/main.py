@@ -20,7 +20,21 @@ from dotenv import load_dotenv
 from apscheduler.schedulers.background import BackgroundScheduler
 from scheduler.jobs import run_pipeline
 
-# start scheduler when app starts
+
+load_dotenv()
+
+DB_PATH = os.getenv("DB_PATH", "data/finsense.db")
+
+app = FastAPI(title="FinSense API", version="1.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
 @app.on_event("startup")
 def start_scheduler():
     scheduler = BackgroundScheduler()
@@ -35,18 +49,6 @@ def start_scheduler():
     print("[scheduler] Started — pipeline runs every 6 hours")
 
 
-load_dotenv()
-
-DB_PATH = os.getenv("DB_PATH", "data/finsense.db")
-
-app = FastAPI(title="FinSense API", version="1.0")
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 @app.get("/")
 def root():
